@@ -26,7 +26,7 @@ namespace PitProctor.Services
     public class FooService : IFooService
     {
         //private readonly ILogger<FooService> _logger;
-        public FooService(ILoggerFactory loggerFactory)
+        public FooService()//ILoggerFactory loggerFactory)
         {
             //_logger = loggerFactory.CreateLogger<FooService>();
         }
