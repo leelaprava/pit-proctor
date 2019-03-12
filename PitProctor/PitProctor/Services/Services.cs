@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
 using PitProctor.Interfaces;
+using NLog;
 
 namespace PitProctor.Services
 {
@@ -25,15 +25,15 @@ namespace PitProctor.Services
 
     public class FooService : IFooService
     {
-        //private readonly ILogger<FooService> _logger;
+        private readonly Logger _logger;
         public FooService()//ILoggerFactory loggerFactory)
         {
-            //_logger = loggerFactory.CreateLogger<FooService>();
+            _logger = LogManager.GetCurrentClassLogger(); ;
         }
 
         public void DoThing(int number)
         {
-            //_logger.LogInformation($"Doing the thing {number}");
+            _logger.Info($"Doing the thing {number}");
             Console.WriteLine($"Doing the thing {number}");
         }
     }
