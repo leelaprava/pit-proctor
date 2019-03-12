@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using PitProctor.Interfaces;
-using PitProctor.Services;
 
 namespace PitProctor
 {
@@ -21,29 +19,32 @@ namespace PitProctor
         }
         static void ConfigureLogging()
         {
-            var config = new NLog.Config.LoggingConfiguration();
-            //Console.WriteLine("log/" + DateTime.Today.Month+"-"+DateTime.Today.Day+ "-"+DateTime.Today.Year + "/Server.log");
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "log/" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + DateTime.Today.Year + "/Server.log" };
-            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+            var config = new LoggingConfiguration();
+
+            var logfile = new FileTarget("logfile")
+            {
+                FileName = "log/" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + DateTime.Today.Year + "/Server.log",
+                Layout = "${longdate} ${level} ${message}  ${exception}"
+            };
+            var logconsole = new ConsoleTarget("logconsole")
+            {
+                Layout = "${longdate} ${level} ${message}  ${exception}"
+            };
 
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
 
             NLog.LogManager.Configuration = config;
         }
-
+        
         static void ConfigureServices()
         {
             ConfigureLogging();
             var logger = NLog.LogManager.GetCurrentClassLogger();
             logger.Info("Configured the Logging");
             var serviceProvider = new ServiceCollection()
-               .AddSingleton<IFooService, FooService>()
-               .AddSingleton<IBarService, BarService>()
-               .BuildServiceProvider();
+                .BuildServiceProvider();
             logger.Info("Configured the Services and Dependency Injection");
-            //var bar = serviceProvider.GetService<IBarService>();
-            //bar.DoSomeRealWork();
         }
     }
 }
